@@ -30,4 +30,8 @@ public class RestaurantService {
     public List<Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    public int getTotalOrderValue(String restaurantName, List<String> items) throws restaurantNotFoundException, itemNotFoundException {
+        return 0;
+    }
 }

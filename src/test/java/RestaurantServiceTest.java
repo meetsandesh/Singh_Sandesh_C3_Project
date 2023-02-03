@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.*;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +19,8 @@ class RestaurantServiceTest {
         restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
         restaurant.addToMenu("Sweet corn soup",119);
         restaurant.addToMenu("Vegetable lasagne", 269);
+        restaurant.addToMenu("Alfredo Pasta", 200);
+        restaurant.addToMenu("Vegetable Maggie", 50);
     }
 
 
@@ -59,4 +63,50 @@ class RestaurantServiceTest {
         assertEquals(initialNumberOfRestaurants + 1,service.getRestaurants().size());
     }
     //<<<<<<<<<<<<<<<<<<<<ADMIN: ADDING & REMOVING RESTAURANTS>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+    //>>>>>>>>>>>>>>>>>>>>>>TOTAL COST OF ORDER<<<<<<<<<<<<<<<<<<<<<<<<<<
+    @Test
+    public void get_total_order_value_should_return_total_cost_of_order_if_order_is_not_empty() throws restaurantNotFoundException, itemNotFoundException {
+        String restaurantName = "Amelie's cafe";
+        List<String> items = new ArrayList<>();
+        items.add("Sweet corn soup");
+        items.add("Alfredo Pasta");
+        int totalCost = service.getTotalOrderValue(restaurantName, items);
+        assertEquals(319, totalCost);
+    }
+
+    @Test
+    public void get_total_order_value_should_return_updated_total_cost_of_order_if_an_item_is_added_in_the_order() throws restaurantNotFoundException, itemNotFoundException {
+        String restaurantName = "Amelie's cafe";
+        List<String> items = new ArrayList<>();
+        items.add("Sweet corn soup");
+        items.add("Alfredo Pasta");
+        int totalCost = service.getTotalOrderValue(restaurantName, items);
+        assertEquals(319, totalCost);
+
+        //add more items
+        items.add("Vegetable Maggie");
+        int totalCostAfterAddingItem3 = service.getTotalOrderValue(restaurantName, items);
+        assertEquals(369, totalCostAfterAddingItem3);
+    }
+
+    @Test
+    public void get_total_order_value_should_return_updated_total_cost_of_order_if_an_item_is_removed_from_the_order() throws restaurantNotFoundException, itemNotFoundException {
+        String restaurantName = "Amelie's cafe";
+        List<String> items = new ArrayList<>();
+        items.add("Sweet corn soup");
+        items.add("Alfredo Pasta");
+        items.add("Vegetable Maggie");
+        int totalCost = service.getTotalOrderValue(restaurantName, items);
+        assertEquals(369, totalCost);
+
+        //remove an item
+        items.remove("Alfredo Pasta");
+        int totalCostAfterAddingItem3 = service.getTotalOrderValue(restaurantName, items);
+        assertEquals(169, totalCostAfterAddingItem3);
+    }
+
+
+    //<<<<<<<<<<<<<<<<<<<<<<TOTAL COST OF ORDER>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
